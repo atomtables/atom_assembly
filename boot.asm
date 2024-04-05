@@ -2,7 +2,6 @@ org		0x7c00			; set origin of memory
 mov		[bootDisk], dl	; keep our boot disk number safe
 
 ; ********************************
-
 call	loadSectors	; load sectors (hardcoded values)
 
 mov		di, scanStr	; move target string address to di
@@ -34,6 +33,8 @@ db			0x55, 0xaa			; define the "magic word" to show this as a bootloader
 ; ********************************
 ;          DATA SECTION
 ; ********************************
+section data:
+
 scanStr:	db		"atom>> ", 0x0
 success:	db		"success read...", 0x0
 prompt:		resb	101						; all strings must be defined one extra than length for null termination.

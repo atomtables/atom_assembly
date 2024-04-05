@@ -70,13 +70,13 @@ printc:						; subroutine to print a single character
 printnl:
 	pusha						; move all regs to stack
 
-	nlstr:	db 0xd, 0xa, 0x0	; Oxd=CR, 0xa=LF, 0x0=terminator
-
 	mov		di, nlstr			; move newline definition to function argument
 	call	print				; print newline
 
 	popa						; move all stack to regs
 	ret
+
+	nlstr:	db 0xd, 0xa, 0x0	; Oxd=CR, 0xa=LF, 0x0=terminator
 
 ; ****************************************************************************
 
