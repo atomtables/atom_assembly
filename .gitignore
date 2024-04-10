@@ -1,3 +1,4 @@
 *.bin
+*.swp
 build+run.sh
 .vscode/launch.json

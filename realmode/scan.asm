@@ -1,17 +1,15 @@
-scan:
+scanln:
 	pusha 						; move all regs to stack
 
-	cmp 	di, 0x0 			; check if di is null
+	cmp 	si, 0x0 			; check if di is null
 	je 		scanTerminate 		; if so, terminate
 
-	cmp 	si, 0x0 			; check if si is null
+	cmp 	di, 0x0 			; check if si is null
 	je 		scanTerminate 		; if so, terminate
 
 
 	scanStart:
-	mov 	cx, di 				; set cx to our target length
-	mov 	di, 0x0 			; reset di to use as addressing offset
-	mov 	bx, si 				; move our string address to base-address register
+	mov 	cx, 0x0				; set cx to our target length
 
 
 	scanLoop:
@@ -25,26 +23,29 @@ scan:
 	call 	printc 				; print character
 	mov 	dl, 0 				; reset data 8-bit register
 
-	mov 	[bx+di], al 		; add the character to the string
-	inc 	di 					; increment the "for loop" counter
-
-	cmp 	cx, di 				; check if incrementer is the same as string length
-	je 		scanEnd 			; if so, end
-
 	cmp 	al, 0xd 			; check if input is a newline
 	je 		scanEnd 			; terminate the loop in that case
+
+	mov 	[di], al 			; add the character to the string
+	inc 	cx 					; increment the "for loop" counter
+	inc 	di
+
+	cmp 	cx, si 				; check if incrementer is the same as string length
+	je 		scanEnd 			; if so, end
 
 	jmp 	scanContinue 		; skip handling a backspace
 
 
 	scanBackspace: 				; if jumped to this location
-	cmp 	di-1, 0x0
+	cmp 	cx-1, 0x0
 	jle 	scanContinue
+
 	mov 	dl, al 				; move character input to 8-bit data
 	call 	printc 				; print character
 	mov 	dl, 0 				; reset data 8-bit register
-	mov 	[bx+di], byte 0x0 	; replace backspaced byte with a null byte
-	dec 	di 					; decrement the counter in order to prepare for rewrite.
+	dec 	di					; decrement current byte
+	mov 	[di], byte 0x0 		; replace backspaced byte with a null byte
+	dec 	cx 					; decrement the counter in order to prepare for rewrite.
 
 
 	scanContinue: 				; area after handling a backspace
@@ -52,7 +53,7 @@ scan:
 
 
 	scanEnd:
-	mov 	[bx+di], byte 0x0 	; null terminate the string for good measure
+	mov 	[di], byte 0x0 		; null terminate the string for good measure
 
 
 	scanTerminate: 				; area where termination should jump to

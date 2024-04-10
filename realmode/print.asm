@@ -1,28 +1,25 @@
 print:						; subroutine to print a string.
 	pusha					; move all regs to stack
-	cmp		di, 0x0			; if args are empty, end execution
-	je		printEnd
     
 
 	printStart:
 	mov		ah, 0x0e		; set to tty mode
-	mov		bx, di			; move argument pointer to base address reg.
     
 
 	printLoop:
-	cmp		byte [bx], 0x0	; check if string is null terminated
+	cmp		byte [si], 0x0	; check if string is null terminated
 	je		printEnd		; if it is, exit.
 
-	mov		al, byte [bx]	; move value of base address to argument register
+	mov		al, byte [si]	; move value of base address to argument register
 	int		0x10			; call interrupt
 
-	inc		bx				; increment base address
+	inc		si				; increment base address
 	jmp		printLoop		; until string is null terminated
 
 
 	printEnd:
 	popa					; move all stack to regs
-	mov		di, 0x0			; empty parameter
+	mov		si, 0x0			; empty parameter
 	ret						; return to main function
 
 ; ****************************************************************************
@@ -70,7 +67,7 @@ printc:						; subroutine to print a single character
 printnl:
 	pusha						; move all regs to stack
 
-	mov		di, nlstr			; move newline definition to function argument
+	mov		si, nlstr			; move newline definition to function argument
 	call	print				; print newline
 
 	popa						; move all stack to regs
